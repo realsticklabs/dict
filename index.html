@@ -51,10 +51,10 @@
             }
 
             const words = await loadWords();
-            const matchingWords = words.filter(word => word.includes(syllable));
+            const matchingWords = words.filter(word => word.includes(syllable)).slice(0, 10);
 
             if (matchingWords.length > 0) {
-                resultsDiv.innerHTML = `<p>Words containing "${syllable}":</p><ul>` +
+                resultsDiv.innerHTML = `<p>First 10 words containing "${syllable}":</p><ul>` +
                     matchingWords.map(word => `<li>${word}</li>`).join('') + '</ul>';
             } else {
                 resultsDiv.innerHTML = `<p>No words found containing "${syllable}".</p>`;
