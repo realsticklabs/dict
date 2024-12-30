@@ -1,28 +1,65 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <link rel="icon" href="dictionary.png" type="image/x-icon">
-  <title>Bomb Party Dictionary</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllable Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
 </head>
-
 <body>
-  <h1>💣 Bomb Party Word Generator! 🎉</h1>
+    <h1>Find Words Containing a Syllable</h1>
+    <input type="text" id="syllableInput" placeholder="Enter syllable">
+    <button onclick="findWords()">Find Words</button>
 
-  <div id="main">
-    <label>Syllable</label>
-    <br>
-    <input type="text" placeholder="Enter syllable here" class="search"/>
+    <div id="results"></div>
 
-    <div id="output">
-      <div class="words"<p id="long"></p></div>
-      <div class="words"><p id="short"></p></div>
-    </div>  
-  </div>
-  <script src="script.js"></script>
+    <script>
+        async function loadWords() {
+            try {
+                const response = await fetch('words.txt');
+                if (!response.ok) {
+                    throw new Error('Failed to load words.txt');
+                }
+                const text = await response.text();
+                return text.split(/\r?\n/); // Split words by newline
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
+        }
+
+        async function findWords() {
+            const syllable = document.getElementById('syllableInput').value.trim();
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (!syllable) {
+                resultsDiv.innerHTML = '<p>Please enter a syllable.</p>';
+                return;
+            }
+
+            const words = await loadWords();
+            const matchingWords = words.filter(word => word.includes(syllable));
+
+            if (matchingWords.length > 0) {
+                resultsDiv.innerHTML = `<p>Words containing "${syllable}":</p><ul>` +
+                    matchingWords.map(word => `<li>${word}</li>`).join('') + '</ul>';
+            } else {
+                resultsDiv.innerHTML = `<p>No words found containing "${syllable}".</p>`;
+            }
+        }
+    </script>
 </body>
-
 </html>
