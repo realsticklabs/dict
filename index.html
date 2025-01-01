@@ -20,7 +20,7 @@
 </head>
 <body>
     <h1>Find Words Containing a Syllable</h1>
-    <input type="text" id="syllableInput" placeholder="Enter syllable">
+    <input type="text" id="syllableInput" placeholder="Enter syllable" onkeypress="handleKeyPress(event)">
     <button onclick="findWords()">Find Words</button>
 
     <div id="results"></div>
@@ -42,7 +42,6 @@
 
         async function findWords() {
             const syllable = document.getElementById('syllableInput').value.trim();
-            const syllabled = syllable.toUpperCase();
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';
 
@@ -52,13 +51,19 @@
             }
 
             const words = await loadWords();
-            const matchingWords = words.filter(word => word.includes(syllabled)).slice(0, 10);
+            const matchingWords = words.filter(word => word.includes(syllable)).slice(0, 10);
 
             if (matchingWords.length > 0) {
-                resultsDiv.innerHTML = `<p>First 10 words containing "${syllabled}":</p><ul>` +
+                resultsDiv.innerHTML = `<p>First 10 words containing "${syllable}":</p><ul>` +
                     matchingWords.map(word => `<li>${word}</li>`).join('') + '</ul>';
             } else {
-                resultsDiv.innerHTML = `<p>No words found containing "${syllabled}".</p>`;
+                resultsDiv.innerHTML = `<p>No words found containing "${syllable}".</p>`;
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                findWords();
             }
         }
     </script>
