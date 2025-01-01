@@ -1,1 +1,72 @@
-bruh
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllable Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Find Words Containing a Syllable</h1>
+    <input type="text" id="syllableInput" placeholder="Enter syllable" onkeypress="handleKeyPress(event)">
+    <button onclick="findWords()">Find Words</button>
+
+    <div id="results"></div>
+
+    <script>
+        async function loadWords() {
+            try {
+                const response = await fetch('words.txt');
+                if (!response.ok) {
+                    throw new Error('Failed to load words.txt');
+                }
+                const text = await response.text();
+                return text.split(/\r?\n/); // Split words by newline
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
+        }
+
+        async function findWords() {
+            const syllable = document.getElementById('syllableInput').value.trim();
+            const asyllable = syllable.toUpperCase();
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (!syllable) {
+                resultsDiv.innerHTML = '<p>Please enter a syllable.</p>';
+                return;
+            }
+
+            const words = await loadWords();
+            const matchingWords = words.filter(word => word.includes(asyllable)).slice(0, 10);
+
+            if (matchingWords.length > 0) {
+                resultsDiv.innerHTML = `<p>First 10 words containing "${asyllable}":</p><ul>` +
+                    matchingWords.map(word => `<li>${word}</li>`).join('') + '</ul>';
+            } else {
+                resultsDiv.innerHTML = `<p>No words found containing "${asyllable}".</p>`;
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                findWords();
+            }
+        }
+    </script>
+</body>
+</html>
