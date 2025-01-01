@@ -43,23 +43,6 @@
         async function findWords() {
             const syllable = document.getElementById('syllableInput').value.trim();
             const asyllable = syllable.toUpperCase();
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
-
-            if (!syllable) {
-                resultsDiv.innerHTML = '<p>Please enter a syllable.</p>';
-                return;
-            }
-
-            const words = await loadWords();
-            const matchingWords = words.filter(word => word.includes(asyllable)).slice(0, 10);
-
-            if (matchingWords.length > 0) {
-                resultsDiv.innerHTML = `<p>First 10 words containing "${asyllable}":</p><ul>` +
-                    matchingWords.map(word => `<li>${word}</li>`).join('') + '</ul>';
-            } else {
-                resultsDiv.innerHTML = `<p>No words found containing "${asyllable}".</p>`;
-            }
         }
 
         function handleKeyPress(event) {
