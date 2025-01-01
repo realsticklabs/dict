@@ -42,7 +42,7 @@
 
         async function findWords() {
             const syllable = document.getElementById('syllableInput').value.trim();
-            const asyllable = toUpperCase(syllable)
+            const asyllable = syllable.toUpperCase()
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';
 
