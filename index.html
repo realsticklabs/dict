@@ -52,10 +52,13 @@
             }
 
             const words = await loadWords();
-            const matchingWords = words.filter(word => word.includes(asyllable)).slice(0, 10);
+            const matchingWords = words
+                .filter(word => word.includes(asyllable))
+                .sort((a, b) => a.length - b.length) // Sort by length
+                .slice(0, 10); // Take the first 10 shortest words
 
             if (matchingWords.length > 0) {
-                    resultsDiv.innerHTML = `<p>First 10 words containing "${asyllable}":</p><ul>` +
+                resultsDiv.innerHTML = `<p>First 10 shortest words containing "${asyllable}":</p><ul>` +
                     matchingWords.map(word => `<li>${word}</li>`).join('') + '</ul>';
             } else {
                 resultsDiv.innerHTML = `<p>No words found containing "${asyllable}".</p>`;
